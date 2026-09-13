@@ -6,16 +6,12 @@ const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://dashaboard-ashen.vercel.app",
-    ],
+    origin: ["http://localhost:5173", process.env.CORS_ORIGIN].filter(Boolean),
   })
 );                       
 
@@ -30,6 +26,12 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`server started on port ${PORT}`);
-});
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`server started on port ${PORT}`);
+    });
+  })
+  .catch(() => {
+    process.exit(1);
+  });
