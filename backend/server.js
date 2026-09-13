@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors");           //  add
+const cors = require("cors");           
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
@@ -10,10 +10,15 @@ connectDB();
 
 const app = express();
 
-app.use(cors(
-  {origin: process.env.CORS_ORIGIN,
-     
-}));                         // add this
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://dashaboard-ashen.vercel.app",
+    ],
+  })
+);                       
+
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);

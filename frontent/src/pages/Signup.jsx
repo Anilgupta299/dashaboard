@@ -3,7 +3,7 @@ import { useState } from "react";
 import { signupUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
-import Link from "react-router-dom/Link";
+import {Link} from "react-router-dom";
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
