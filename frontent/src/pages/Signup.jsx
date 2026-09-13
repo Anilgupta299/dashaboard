@@ -3,7 +3,7 @@ import { useState } from "react";
 import { signupUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "./Signup.css";
-
+import Link from "react-router-dom/Link";
 function Signup() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -64,7 +64,7 @@ function Signup() {
 
           <button type="submit">Signup</button>
           <p>
-            Already have an account? <a href="/signin">Signin</a>
+            Already have an account? <Link to="/signin">Signin</Link>
           </p>
         </form>
       </div>
