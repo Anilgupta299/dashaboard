@@ -11,19 +11,28 @@ function Dashboard() {
   const [password, setPassword] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-
   const fetchUsers = async () => {
     try {
       const response = await getUsers();
 
-      setUsers(response.data);
+      setUsers(response.data.users || []);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
+
+  useEffect(() => {
+    let cancelled = false;
+    getUsers()
+      .then((response) => {
+        if (!cancelled) setUsers(response.data.users || []);
+      })
+      .catch((error) => console.error("Error fetching users:", error));
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const saveUser = async (e) => {
     e.preventDefault();
@@ -40,17 +49,20 @@ function Dashboard() {
           name,
           email,
           role,
+          password,
         });
       }
 
       setName("");
       setEmail("");
       setRole("");
+      setPassword("");
       setEditingId(null);
 
       fetchUsers();
     } catch (error) {
       console.error("Error saving user:", error);
+      alert(error.response?.data?.message || "Unable to save user");
     }
   };
 
@@ -75,6 +87,7 @@ function Dashboard() {
     setName("");
     setEmail("");
     setRole("");
+    setPassword("");
     setEditingId(null);
   };
   return (
@@ -88,11 +101,11 @@ function Dashboard() {
         setName={setName}
         setEmail={setEmail}
         setRole={setRole}
+        password={password}
+        setPassword={setPassword}
         editingId={editingId}
         saveUser={saveUser}
         cancelEdit={cancelEdit}
-        password={password}
-        setPassword={setPassword}
       />
 
       <UserList users={users} editUser={editUser} handleDelete={handleDelete} />

@@ -12,6 +12,8 @@ const app = express();
 app.use(
   cors({
     origin: ["http://localhost:5173", process.env.CORS_ORIGIN].filter(Boolean),
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );                       
 
@@ -21,7 +23,11 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Hello world with database connection");
+  res.json({ success: true, message: "Backend is running" });
+});
+
+app.get("/health", (req, res) => {
+  res.json({ success: true, message: "Backend is running" });
 });
 
 const PORT = process.env.PORT || 5000;

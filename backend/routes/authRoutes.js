@@ -3,13 +3,23 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+
+const publicUser = (user) => ({
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+});
+
 router.post("/signin", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const email = req.body.email?.trim().toLowerCase();
+    const { password } = req.body;
 
     // 1. Check email and password
     if (!email || !password) {
       return res.status(400).json({
+        success: false,
         message: "Email and password are required",
       });
     }
@@ -19,6 +29,7 @@ router.post("/signin", async (req, res) => {
 
     if (!user) {
       return res.status(401).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
@@ -31,6 +42,7 @@ router.post("/signin", async (req, res) => {
 
     if (!isPasswordMatch) {
       return res.status(401).json({
+        success: false,
         message: "Invalid email or password",
       });
     }
@@ -49,28 +61,27 @@ router.post("/signin", async (req, res) => {
 
     // 5. Send response
     res.status(200).json({
-      message: "Signin successful",
+      success: true,
+      message: "Login successful",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: publicUser(user),
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      success: false,
+      message: "Unable to sign in",
     });
   }
 });
 
 router.post("/signup", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, password } = req.body;
+    const email = req.body.email?.trim().toLowerCase();
 
     if (!name || !email || !password) {
       return res.status(400).json({
+        success: false,
         message: "Name, email and password are required",
       });
     }
@@ -79,6 +90,7 @@ router.post("/signup", async (req, res) => {
 
     if (existingUser) {
       return res.status(400).json({
+        success: false,
         message: "Email already registered",
       });
     }
@@ -92,17 +104,14 @@ router.post("/signup", async (req, res) => {
     });
 
     res.status(201).json({
+      success: true,
       message: "Signup successful",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-      },
+      user: publicUser(user),
     });
   } catch (error) {
     res.status(500).json({
-      message: error.message,
+      success: false,
+      message: "Unable to create account",
     });
   }
 });

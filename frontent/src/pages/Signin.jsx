@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signinUser } from "../services/api";
 import "./Signin.css";
+import { Link } from "react-router-dom";
 
 function Signin() {
   const [email, setEmail] = useState("");
@@ -66,7 +67,7 @@ function Signin() {
             Signin
           </button>
           <p>
-            Don't have an account? <a href="/">Signup</a>
+            Don't have an account? <Link to="/">Signup</Link>
           </p>
         </form>
       </div>

@@ -11,9 +11,11 @@ function UserForm({
   name,
   email,
   role,
+  password,
   setName,
   setEmail,
   setRole,
+  setPassword,
   editingId,
   saveUser,
   cancelEdit,
@@ -43,6 +45,16 @@ function UserForm({
           value={role}
           onChange={(e) => setRole(e.target.value)}
         />
+
+        {!editingId && (
+          <input className="input"
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        )}
         
 
         <button className="primary-btn" type="submit">{editingId ? "Update User" : "Add User"}</button>
